@@ -26,6 +26,7 @@ const StreamingClient = () => {
     this.language = 'en';
     this.bufferSize = 16384;
     this.isSpeaking = false;
+    this.isSocketConnected = false;
 
     function setStateOnMicStart() {
         _this.isStreaming = true;
@@ -112,7 +113,7 @@ const StreamingClient = () => {
     }
 
     function downSampleBuffer(buffer, sampleRate, outSampleRate) {
-        if (outSampleRate == sampleRate) {
+        if (outSampleRate === sampleRate) {
             return buffer;
         }
         if (outSampleRate > sampleRate) {
@@ -177,50 +178,52 @@ const StreamingClient = () => {
                 // let data_16000 = data_44100;
                 _this.isStreamingOver = true;
                 _this.socket.emit('mic_data', data_16000, _this.language, false, true);
-                console.log("emitted last");
             }
         }
     }
 
 
-    this.startStreaming = async (responseCallback) => {
-        setStateOnMicStart();
+    this.startStreaming = async (responseCallback = () => {}, errorCallback = () => {}) => {
+        try {
+            setStateOnMicStart();
+            let stream = await getAudioMediaStream();
 
-        let stream = await getAudioMediaStream();
+            // connect socket here if needed
 
-        // connect socket here if needed
+            const audioContextClass = window.AudioContext || window.webkitAudioContext;
+            const context = new audioContextClass({
+                latencyHint: 'interactive',
+            });
+            _this.defaultSampleRate = context.sampleRate;
 
-        let audioContextClass = window.AudioContext || window.webkitAudioContext;
-        let context = new audioContextClass({
-            latencyHint: 'interactive',
-        });
-        _this.defaultSampleRate = context.sampleRate;
-
-        setSilenceDetector(stream.clone(), context);
+            setSilenceDetector(stream.clone(), context);
 
 
-        _this.input = context.createMediaStreamSource(stream);
-        _this.processor = context.createScriptProcessor(_this.bufferSize, 1, 1);
+            _this.input = context.createMediaStreamSource(stream);
+            _this.processor = context.createScriptProcessor(_this.bufferSize, 1, 1);
 
-        _this.input.connect(_this.processor);
-        _this.processor.connect(context.destination);
+            _this.input.connect(_this.processor);
+            _this.processor.connect(context.destination);
 
-        _this.processor.onaudioprocess = streamAudioProcess;
+            _this.processor.onaudioprocess = streamAudioProcess;
 
-        // clear states
-        // access media library, proceed to next if access enabled / throw error
-        // if needed, connect to socket
-        // set silence detector
-        // stream processor(responseCallback)
+            // clear states
+            // access media library, proceed to next if access enabled / throw error
+            // if needed, connect to socket
+            // set silence detector
+            // stream processor(responseCallback)
 
-        _this.socket.on('response', function (data, language) {
-            if (language === "en-IN") data = data.toLowerCase();
-            responseCallback(data)
-        });
+            _this.socket.on('response', function (data, language) {
+                if (language === "en-IN") data = data.toLowerCase();
+                responseCallback(data)
+            });
+
+        } catch (e) {
+            errorCallback(e);
+        }
     }
 
-    this.stopStreaming = (callback = function () {
-    }) => {
+    this.stopStreaming = (callback = () => {}) => {
         // revoke access to media library
         // if needed, disable socket
         // disable silence detector
@@ -240,15 +243,14 @@ const StreamingClient = () => {
         let finalBuffer = flattenArray(_this.audioData, _this.recordingLength);
         let blob = generateWavBlob(finalBuffer);
         if (blob == null) {
-            console.log("no blob generated");
             callback(null);
             return;
         }
         callback(blob);
-        disconnect();
+        _this.disconnect();
     }
 
-    this.connect = (socketURL, transcription_language, onSuccess, onError) => {
+    this.connect = (socketURL, transcription_language, onSuccess = () => {}, onError = () => {}) => {
         // establish connection
         // emit connect event
         // listen on connect success
@@ -259,20 +261,20 @@ const StreamingClient = () => {
         _this.socket = io(socketURL, {autoConnect: false, query: `language=${_this.language}`});
         _this.socket.connect();
 
-
         _this.socket.on('connect', function () {
             _this.userId = _this.socket.id;
             _this.socket.emit('connect_mic_stream');
         });
 
         _this.socket.on('connect-success', function (data) {
-            console.log("connect-success", _this.userId);
             onSuccess(null, _this.userId)
+            _this.isSocketConnected = true;
         });
 
         _this.socket.on('disconnect', function () {
-            console.log("disconnected");
+            _this.isSocketConnected = false;
         })
+
         _this.socket.on('terminate', function () {
             onSuccess("Terminate", _this.userId);
         });
@@ -287,6 +289,31 @@ const StreamingClient = () => {
         // trigger onSuccess/onError depending on response
         _this.socket.disconnect();
     }
+
+    this.isSocketConnected = () => _this.isSocketConnected;
+
+    this.punctuateText = (textToPunctuate, punctuationUrl, onSuccess= ()=>{}, onError= ()=>{}) => {
+        let formData = new FormData();
+        formData.append("text", textToPunctuate);
+        formData.append("language", _this.language);
+        $.ajax({
+            type: 'POST',
+            url: punctuationUrl,
+            data: formData,
+            contentType: false,
+            processData: false,
+            crossDomain: true,
+            success: function (response, textStatus, jqXHR) {
+                const resp = response["data"];
+                onSuccess(textStatus, resp["text"]);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                onError(textStatus, errorThrown);
+            }
+
+        });
+    }
 }
+
 
 module.exports = StreamingClient;
