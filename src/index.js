@@ -1,4 +1,7 @@
-const StreamingClient = () => {
+var hark= require('./hark.bundle');
+var io =require('socket.io-client')
+
+module.exports = function () {
     const _this = this;
     this.socket = null;
     this.defaultSampleRate = 48000;
@@ -183,7 +186,7 @@ const StreamingClient = () => {
     }
 
 
-    this.startStreaming = async (responseCallback = () => {}, errorCallback = () => {}) => {
+    this.startStreaming = async function (responseCallback = () => {}, errorCallback = () => {}) {
         try {
             setStateOnMicStart();
             let stream = await getAudioMediaStream();
@@ -314,6 +317,3 @@ const StreamingClient = () => {
         });
     }
 }
-
-
-module.exports = StreamingClient;
