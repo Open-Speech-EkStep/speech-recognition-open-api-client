@@ -6,7 +6,7 @@ jobs:
   test:
     executor:
       name: node/default
-      tag: "13.14" # You could specify the node version via the docker image.
+      tag: "14.17.5"
     steps:
       - checkout
       - node/install-packages
@@ -15,6 +15,6 @@ jobs:
       - store_artifacts:
           path: coverage
 workflows:
-  test_my_app:
+  build_test_publish:
     jobs:
       - test
