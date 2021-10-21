@@ -2,8 +2,19 @@ version: 2.1
 orbs:
   node: circleci/node@4.7
 
+jobs:
+  test:
+    executor:
+      name: node/default
+      tag: "13.14" # You could specify the node version via the docker image.
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          command: npm run test
+      - store_artifacts:
+          path: coverage
 workflows:
-  build_test_publish:
+  test_my_app:
     jobs:
-      - node/test:
-          version: "14.17.5"
+      - test
