@@ -13,8 +13,9 @@
   "author": "EkStep OpenSpeech Team",
   "license": "ISC",
   "dependencies": {
-    "socket.io-client": "^2.3.0",
-    "socket.io-stream": "^0.9.1"
+    "hark": "1.2.3",
+    "socket.io-client": "2.3.0",
+    "socket.io-stream": "0.9.1"
   },
   "devDependencies": {}
 }
