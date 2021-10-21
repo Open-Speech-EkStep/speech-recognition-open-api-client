@@ -1,4 +1,4 @@
-var hark= require('./hark.bundle');
+var hark= require('hark');
 var io =require('socket.io-client')
 
 module.exports = function () {
@@ -299,21 +299,18 @@ module.exports = function () {
         let formData = new FormData();
         formData.append("text", textToPunctuate);
         formData.append("language", _this.language);
-        $.ajax({
-            type: 'POST',
-            url: punctuationUrl,
-            data: formData,
-            contentType: false,
-            processData: false,
-            crossDomain: true,
-            success: function (response, textStatus, jqXHR) {
-                const resp = response["data"];
-                onSuccess(textStatus, resp["text"]);
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                onError(textStatus, errorThrown);
-            }
-
+        let status;
+        fetch(punctuationUrl, {
+            method: 'POST',
+            body: formData,
+        }).then(response => {
+            status = response.status;
+            return response.json();
+        }).then(body => {
+            const data = body["data"];
+            onSuccess(status, data["text"]);
+        }).catch((error) => {
+            onError(status, error);
         });
     }
 }
