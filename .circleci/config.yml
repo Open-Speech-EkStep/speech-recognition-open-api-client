@@ -35,10 +35,13 @@ jobs:
       - *fast-checkout
       - run:
           name: Authenticate with registry
-          command: echo "I can publish your package"
+          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/.npmrc
       - run:
           name: Publish package
-          command: pwd && ls && npm --version
+          command: npm publish
+      - run:
+          name: Logout npm
+          command: npm logout
 workflows:
   build_test_publish:
     jobs:
