@@ -13,7 +13,7 @@ jobs:
     steps:
       - checkout
       - persist_to_workspace:
-          root: .
+          root: ~/repo
           paths:
             - .
   test:
@@ -35,7 +35,10 @@ jobs:
       - *fast-checkout
       - run:
           name: Authenticate with registry
-          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/.npmrc
+          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/repo/.npmrc
+      - run:
+          name: Check logged in user
+          command: npm whoami
       - run:
           name: Publish package
           command: npm publish --access public
