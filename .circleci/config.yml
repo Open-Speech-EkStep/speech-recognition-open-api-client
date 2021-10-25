@@ -43,7 +43,9 @@ workflows:
   build_test_publish:
     jobs:
       - create-workspace
-      - test
+      - test:
+          requires:
+          - create-workspace
       - approve_to_publish:
           name: approve-package-publish
           type: approval
