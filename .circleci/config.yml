@@ -2,13 +2,27 @@ version: 2.1
 orbs:
   node: circleci/node@4.7
 
+definition:
+  fast-checkout: &fast-checkout
+    attach_workspace:
+      at: .
+
 jobs:
+  create-workspace:
+    executor: node/default
+    steps:
+      - checkout
+      - run: rm -rf .git
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
   test:
     executor:
       name: node/default
       tag: "14.17.5"
     steps:
-      - checkout
+      - *fast-checkout
       - node/install-packages
       - run:
           command: npm run test
@@ -19,6 +33,7 @@ jobs:
       name: node/default
       tag: "14.17.5"
     steps:
+      - *fast-checkout
       - run:
           name: Authenticate with registry
           command: echo "I can publish your package"
