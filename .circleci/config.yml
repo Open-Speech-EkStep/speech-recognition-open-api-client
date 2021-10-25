@@ -14,7 +14,30 @@ jobs:
           command: npm run test
       - store_artifacts:
           path: coverage
+  publish-package:
+    executor:
+      name: node/default
+      tag: "14.17.5"
+    steps:
+      - run:
+          name: Authenticate with registry
+          command: echo "I can publish your package"
+      - run:
+          name: Publish package
+          command: pwd && ls && npm --version
 workflows:
   build_test_publish:
     jobs:
       - test
+      - approve_to_publish:
+          name: approve-package-publish
+          type: approval
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
+      - publish-package:
+          name: publish-to-npm
+          requires:
+            - approve-package-publish
