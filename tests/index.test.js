@@ -100,4 +100,17 @@ describe('punctuateText', () => {
         expect(onError).toHaveBeenLastCalledWith(undefined, error);
         expect(onSuccess).not.toHaveBeenCalled();
     });
+
+    it('should return without callback', async function () {
+        const error = new Error('failed to get response');
+        fetchMock.mockRejectOnce(error)
+
+
+        const client = new StreamingClient();
+        const onSuccess = jest.fn();
+        const onError = jest.fn();
+
+        client.punctuateText("hello", "abc.com")
+        await flushPromises();
+    });
 });
