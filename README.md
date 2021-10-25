@@ -1,2 +1,39 @@
-### Client library for Open Speech API
+## Client library for Open Speech API
+
+This package contains a client lib to provide real-time streaming functionality for Open Speech API [https://open-speech-ekstep.github.io/][Open Speech API].
+
+[Open Speech API]: https://open-speech-ekstep.github.io/
+
+
+### How to use it
+
+**Step 1: Install the package**
+
+`npm i @project-sunbird/open-speech-streaming-client`
+
+**Step 2: Connect to socket and stream**
+
+```javascript
+import StreamingClient from '@project-sunbird/open-speech-streaming-client'
+
+//Create instance of streaming client.
+const streamingClient= new StreamingClient();
+
+//Connect to inferencing server
+streaming.connect('<inferencing-server-url>', 'en-IN'/* langugaue*/, function (action, id) {
+    if (action === null) {
+        // Once connection is succesful, start streaming
+        streaming.startStreaming(function (transcript) {
+            // transcript will give you the text which can be used further
+            console.log('transcript:', transcript);
+        }, (e) => {
+            console.log("I got error", e);
+        })
+    } else {
+        //unexpected failures action on connect.
+        console.log("Action", action, id)
+    }
+})
+```
+
 
