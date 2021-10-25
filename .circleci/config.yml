@@ -34,9 +34,6 @@ workflows:
           type: approval
           requires:
             - test
-          filters:
-            branches:
-              only: master
       - publish-package:
           name: publish-to-npm
           requires:
