@@ -1,6 +1,6 @@
 {
   "name": "@project-sunbird/open-speech-streaming-client",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Streaming client library for EkStep open speech API",
   "main": "src/index.js",
   "scripts": {
