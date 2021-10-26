@@ -48,12 +48,18 @@ workflows:
       - create-workspace
       - test:
           requires:
-          - create-workspace
+            - create-workspace
+          filters:
+            tags:
+              only: /.*/
       - approve_to_publish:
           name: approve-package-publish
           type: approval
           requires:
             - test
+          filters:
+            tags:
+              only: /^v.*/
       - publish-package:
           name: publish-to-npm
           requires:
