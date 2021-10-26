@@ -58,3 +58,8 @@ workflows:
           name: publish-to-npm
           requires:
             - approve-package-publish
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
