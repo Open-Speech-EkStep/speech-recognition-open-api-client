@@ -248,7 +248,6 @@ module.exports = function () {
             return;
         }
         callback(blob);
-        _this.disconnect();
     }
 
     this.connect = (socketURL, transcription_language, onSuccess = () => {}, onError = () => {}) => {
@@ -259,7 +258,12 @@ module.exports = function () {
 
         _this.language = transcription_language;
 
-        _this.socket = io(socketURL, {autoConnect: false, query: `language=${_this.language}`});
+        _this.socket = io(socketURL, {
+            autoConnect: false,
+            withCredentials: false,
+            reconnectionAttempts: 5,
+            query: `language=${_this.language}`
+        });
         _this.socket.connect();
 
         _this.socket.on('connect', function () {
@@ -278,6 +282,7 @@ module.exports = function () {
 
         _this.socket.on('terminate', function () {
             onSuccess(SocketStatus.TERMINATED, _this.userId);
+            _this.disconnect();
         });
 
         _this.socket.on('abort', function () {
