@@ -1,6 +1,6 @@
-var hark= require('hark');
-var io =require('socket.io-client');
-var SocketStatus =require('./socket-status')
+const hark= require('hark');
+const {io} = require('socket.io-client');
+const SocketStatus =require('./socket-status');
 
 module.exports = function () {
     const _this = this;
@@ -259,6 +259,7 @@ module.exports = function () {
         _this.language = transcription_language;
 
         _this.socket = io(socketURL, {
+            // path: '/',
             autoConnect: false,
             withCredentials: false,
             reconnectionAttempts: 5,
