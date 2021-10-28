@@ -14,14 +14,14 @@ This package contains a client lib to provide real-time streaming functionality 
 **Step 2: Connect to socket and stream**
 
 ```javascript
-import StreamingClient from '@project-sunbird/open-speech-streaming-client'
+import {StreamingClient,SocketStatus} from '@project-sunbird/open-speech-streaming-client'
 
 //Create instance of streaming client.
 const streamingClient= new StreamingClient();
 
 //Connect to inferencing server
 streaming.connect('<inferencing-server-url>', 'en-IN'/* langugaue*/, function (action, id) {
-    if (action === null) {
+    if (action === SocketStatus.CONNECTED) {
         // Once connection is succesful, start streaming
         streaming.startStreaming(function (transcript) {
             // transcript will give you the text which can be used further
@@ -36,4 +36,19 @@ streaming.connect('<inferencing-server-url>', 'en-IN'/* langugaue*/, function (a
 })
 ```
 
+**Punctuation**
+
+You can punctuate a text using the _punctuation_ endpoint. 
+
+```javascript
+streaming.punctuateText('Text to punctuate', '<inferencing-server-url>', (status, text) => {
+    console.log("Punctuted Text:", text);
+}, (status, error) => {
+    console.log("Failed to punctuate", status, error);
+});
+```
+
+**SocketStatus**
+
+SocketStatus has two possible states.`CONNECTED` and `TERMINATED`
 
