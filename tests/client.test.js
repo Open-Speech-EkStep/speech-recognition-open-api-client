@@ -131,4 +131,20 @@ describe('punctuateText', () => {
         expect(onSuccess).not.toHaveBeenCalled();
         expect(fetchMock).not.toHaveBeenCalled();
     });
+
+    it('should not make api call when text is empty', async function () {
+        const error = new Error('failed to get response');
+        fetchMock.mockRejectOnce(error)
+
+
+        const client = new StreamingClient();
+        const onSuccess = jest.fn();
+        const onError = jest.fn();
+
+        client.punctuateText("", "abc.com", onSuccess, onError);
+        await flushPromises();
+        expect(onError).toHaveBeenCalledWith(400, "Text cannot be empty.");
+        expect(onSuccess).not.toHaveBeenCalled();
+        expect(fetchMock).not.toHaveBeenCalled();
+    });
 });

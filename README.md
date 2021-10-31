@@ -30,7 +30,7 @@ streaming.connect('<inferencing-server-url>', 'en-IN'/* langugaue*/, function (a
             console.log("I got error", e);
         })
     } else if (action === SocketStatus.TERMINATED) {
-        // Socket is closed and punctuation can be done here.
+        // Socket is closed and punctuation can be done after it.
     } else {
         //unexpected failures action on connect.
         console.log("Action", action, id);
