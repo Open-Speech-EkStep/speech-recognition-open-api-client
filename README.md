@@ -54,3 +54,17 @@ streaming.punctuateText('Text to punctuate', '<inferencing-server-url>', (status
 
 SocketStatus has two possible states.`CONNECTED` and `TERMINATED`
 
+------------------------
+
+### Examples
+
+This repo contains examples inside _examples_ directory
+
+**React Example**
+
+_Location:_ examples/react-example
+
+This example has a React implementation of a streaming client which points to  https://inference.vakyansh.in.
+You can start example by `npm start` from inside _examples/react-example_. 
+
+By default, this examples will point to parent repo as SDK so make sure you have dependencies installed on parent project. You can change to point npm by updating _package.json_
