@@ -7,7 +7,7 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            text: '',
+            text: 'Click Start to start speaking..',
             streaming: new StreamingClient()
         }
         // If you want to bind it with the object then add following lines
