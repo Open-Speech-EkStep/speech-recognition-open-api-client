@@ -232,6 +232,7 @@ module.exports = function () {
         // clear states
 
         setStateOnMicStop();
+        _this.socket.emit('mic_data', null, _this.language, false, false);
         _this.socket.emit('mic_data', null, _this.language, false, true);
 
         if (_this.speechEvents && _this.speechEvents !== null)
