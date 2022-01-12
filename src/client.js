@@ -305,13 +305,13 @@ module.exports = function () {
             onError(400, 'Text cannot be empty.');
             return;
         }
-        let formData = new FormData();
-        formData.append("text", textToPunctuate);
-        formData.append("language", _this.language);
         let status;
         fetch(punctuationUrl, {
             method: 'POST',
-            body: formData,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({text: textToPunctuate, language: _this.language}),
         }).then(response => {
             status = response.status;
             return response.json();

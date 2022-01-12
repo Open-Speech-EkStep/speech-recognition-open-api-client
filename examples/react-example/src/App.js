@@ -25,7 +25,7 @@ class App extends React.Component {
             const language = 'hi';
             this.setText('Connecting to server..');
             const _this = this;
-            streaming.connect('http://aws-model-api.vakyansh.in', language, function (action, id) {
+            streaming.connect('https://inference.vakyansh.in', language, function (action, id) {
                 console.log("Connected", id, 'action:', action);
                 if (action === SocketStatus.CONNECTED) {
                     console.log('Starting.....');
