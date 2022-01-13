@@ -77,7 +77,7 @@ describe('punctuateText', () => {
     })
 
     it('should call success callback', async function () {
-        fetchMock.mockOnce('{"data": {"text": "hello", "language": "en-in"}}');
+        fetchMock.mockOnce('{"text": "hello", "language": "en-in"}');
 
 
         const client = new StreamingClient();

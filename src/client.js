@@ -316,8 +316,7 @@ module.exports = function () {
             status = response.status;
             return response.json();
         }).then(body => {
-            const data = body["data"];
-            onSuccess(status, data["text"]);
+            onSuccess(status, body["text"]);
         }).catch((error) => {
             onError(status, error);
         });
