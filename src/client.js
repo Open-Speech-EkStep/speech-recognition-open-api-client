@@ -311,7 +311,7 @@ module.exports = function () {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({text: textToPunctuate, language: _this.language}),
+            body: JSON.stringify({text: textToPunctuate, language: _this.language, enabledItn: true}),
         }).then(response => {
             status = response.status;
             return response.json();
