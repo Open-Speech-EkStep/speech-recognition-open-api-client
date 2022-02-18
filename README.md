@@ -6,14 +6,19 @@ This package contains the client library to provide real-time streaming function
 
 [Open Speech API]: https://open-speech-ekstep.github.io/asr_model_api/
 
-## Table of Contents:
-* [Getting Started](#getting-Started)
-* [Quick Start](#quick-start)
-* [Reference](#reference)
-* [Examples](#examples)
-* [Getting Help](#getting-help)
+## Table of Contents
 
-
+- [Web Client library for Open Speech Streaming API](#web-client-library-for-open-speech-streaming-api)
+  - [Table of Contents](#table-of-contents)
+  - [Getting Started](#getting-started)
+  - [How to Install](#how-to-install)
+    - [In Node.js](#in-nodejs)
+    - [In React Native](#in-react-native)
+  - [Quick Start](#quick-start)
+  - [Reference](#reference)
+  - [Examples](#examples)
+    - [React Example](#react-example)
+  - [Getting Help](#getting-help)
 
 ## Getting Started
 
@@ -30,6 +35,7 @@ npm i @project-sunbird/open-speech-streaming-client
 ```
 
 ### In React Native
+
 To use the client SDK in a react native project, first install the SDK using npm:
 
 ```sh
@@ -46,51 +52,53 @@ import { StreamingClient, SocketStatus } from '@project-sunbird/open-speech-stre
 
 1. Import the StreamingClient module and create an instance.
 
-```javascript
+    ```javascript
 
-import {StreamingClient,SocketStatus} from '@project-sunbird/open-speech-streaming-client'
+    import {StreamingClient,SocketStatus} from '@project-sunbird/open-speech-streaming-client'
 
-//Create instance of streaming client.
-const streamingClient= new StreamingClient();
+    //Create instance of streaming client.
+    const streamingClient= new StreamingClient();
 
-```
+    ```
 
 2. Connect to the streaming server with the url and the language required.
-```javascript
+
+    ```javascript
 
 
-//Connect to inferencing server
-const inferenceServerURL = '<inferencing-server-url>';
-const language = '<language>';  //(eg: 'en')
+    //Connect to inferencing server
+    const inferenceServerURL = '<inferencing-server-url>';
+    const language = '<language>';  //(eg: 'en')
 
-streaming.connect(inferenceServerURL, language, function (action, id) {
-    if (action === SocketStatus.CONNECTED) {
-        // Once connection is succesful, start streaming
-        streaming.startStreaming(function (transcript) {
-            // transcript will give you the text which can be used further
-            console.log('transcript:', transcript);
-        }, (e) => {
-            console.log("I got error", e);
-        })
-    } else if (action === SocketStatus.TERMINATED) {
-        // Socket is closed and punctuation can be done after it.
-    } else {
-        //unexpected failures action on connect.
-        console.log("Action", action, id);
-    }
-})
+    streaming.connect(inferenceServerURL, language, function (action, id) {
+        if (action === SocketStatus.CONNECTED) {
+            // Once connection is succesful, start streaming
+            streaming.startStreaming(function (transcript) {
+                // transcript will give you the text which can be used further
+                console.log('transcript:', transcript);
+            }, (e) => {
+                console.log("I got error", e);
+            })
+        } else if (action === SocketStatus.TERMINATED) {
+            // Socket is closed and punctuation can be done after it.
+        } else {
+            //unexpected failures action on connect.
+            console.log("Action", action, id);
+        }
+    })
 
-```
+    ```
 
 3. If punctuation needed in the client sdk, do the following:
 [Note: Use this inside the condition block(action === SocketStatus.TERMINATED)]
-```javascript
-streaming.punctuateText('<Text to punctuate>', '<punctuation-url>', (status, text) => {
-    console.log("Punctuted Text:", text);
-}, (status, error) => {
-    console.log("Failed to punctuate", status, error);
-});
-```
+
+    ```javascript
+    streaming.punctuateText('<Text to punctuate>', '<punctuation-url>', (status, text) => {
+        console.log("Punctuted Text:", text);
+    }, (status, error) => {
+        console.log("Failed to punctuate", status, error);
+    });
+    ```
 
 ## Reference
 
@@ -102,15 +110,14 @@ SocketStatus has two possible states.`CONNECTED` and `TERMINATED`
 
 This repo contains samples in examples directory.
 
-**React Example**
+### React Example
 
 _Location_: _examples/react-example_
 
-This example has a React implementation of a streaming client which points to  https://inference.vakyansh.in.
-You can start example by `npm start` from inside _examples/react-example_. 
+This example has a React implementation of a streaming client which points to  the link [https://inference.vakyansh.in](https://inference.vakyansh.in).
+You can start example by `npm start` from inside _examples/react-example_.
 
 By default, this examples will point to parent repo as SDK so make sure you have dependencies installed on parent project. You can change to point npm by updating _package.json_
-
 
 ## Getting Help
 

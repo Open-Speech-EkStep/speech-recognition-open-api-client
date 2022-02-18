@@ -22,10 +22,11 @@ class App extends React.Component {
     handleStart() {
         {
             const streaming = this.state.streaming;
+            const url = 'https://inference.vakyansh.in';
             const language = 'hi';
             this.setText('Connecting to server..');
             const _this = this;
-            streaming.connect('https://inference.vakyansh.in', language, function (action, id) {
+            streaming.connect(url, language, function (action, id) {
                 console.log("Connected", id, 'action:', action);
                 if (action === SocketStatus.CONNECTED) {
                     console.log('Starting.....');
@@ -39,7 +40,7 @@ class App extends React.Component {
                 } else if (action === SocketStatus.TERMINATED) {
                     // Socket is closed and punctuation can be done here.
                     console.log("Punctuating: ", _this.state.text);
-                    _this.handlePunctuation(_this.state.text);
+                    // _this.handlePunctuation(_this.state.text);
                 } else {
                     console.log("Un expected action", action, id)
                 }
