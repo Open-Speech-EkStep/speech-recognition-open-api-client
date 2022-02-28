@@ -264,7 +264,8 @@ module.exports = function () {
             autoConnect: false,
             withCredentials: false,
             reconnectionAttempts: 5,
-            query: `language=${_this.language}`
+            query: `language=${_this.language}`,
+            transports: ["websocket", "polling"]
         });
         _this.socket.connect();
 

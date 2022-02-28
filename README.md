@@ -8,17 +8,15 @@ This package contains the client library to provide real-time streaming function
 
 ## Table of Contents
 
-- [Web Client library for Open Speech Streaming API](#web-client-library-for-open-speech-streaming-api)
-  - [Table of Contents](#table-of-contents)
-  - [Getting Started](#getting-started)
-  - [How to Install](#how-to-install)
-    - [In Node.js](#in-nodejs)
-    - [In React Native](#in-react-native)
-  - [Quick Start](#quick-start)
-  - [Reference](#reference)
-  - [Examples](#examples)
-    - [React Example](#react-example)
-  - [Getting Help](#getting-help)
+- [Getting Started](#getting-started)
+- [How to Install](#how-to-install)
+- [In Node.js](#in-nodejs)
+- [In React Native](#in-react-native)
+- [Quick Start](#quick-start)
+- [Reference](#reference)
+- [Examples](#examples)
+- [React Example](#react-example)
+- [Getting Help](#getting-help)
 
 ## Getting Started
 

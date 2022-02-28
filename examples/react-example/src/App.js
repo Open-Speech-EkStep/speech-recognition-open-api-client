@@ -22,7 +22,7 @@ class App extends React.Component {
     handleStart() {
         {
             const streaming = this.state.streaming;
-            const url = 'https://inference.vakyansh.in';
+            const url = '<Add URL HERE>';
             const language = 'hi';
             this.setText('Connecting to server..');
             const _this = this;
