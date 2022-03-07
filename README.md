@@ -2,7 +2,9 @@
 
 [![NPM package](https://badgen.net/github/release/Naereen/Strapdown.js)](https://www.npmjs.com/package/@project-sunbird/open-speech-streaming-client)
 
-This package contains the client library to provide real-time streaming functionality for Open Speech API [https://open-speech-ekstep.github.io/asr_model_api/][Open Speech API].
+This package contains the client library to provide real-time streaming functionality for Open Speech API [https://open-speech-ekstep.github.io/asr_model_api/][Open Speech API]. It requires a Socket.io proxy to support it. Details of the proxy can be found https://github.com/Open-Speech-EkStep/speech-recognition-open-api-proxy. 
+
+Visit [Speech Recognititon Streaming API](https://open-speech-ekstep.github.io/asr_streaming_service/) for architecture and other details.
 
 [Open Speech API]: https://open-speech-ekstep.github.io/asr_model_api/
 
@@ -110,9 +112,9 @@ This repo contains samples in examples directory.
 
 ### React Example
 
-_Location_: _examples/react-example_
+_Location_: [examples/react-example](examples/react-example)
 
-This example has a React implementation of a streaming client which points to  the link [https://inference.vakyansh.in](https://inference.vakyansh.in).
+This example has a React implementation of a streaming client.
 You can start example by `npm start` from inside _examples/react-example_.
 
 By default, this examples will point to parent repo as SDK so make sure you have dependencies installed on parent project. You can change to point npm by updating _package.json_
