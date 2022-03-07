@@ -4,6 +4,9 @@ import {SocketStatus, StreamingClient} from "@project-sunbird/open-speech-stream
 
 class App extends React.Component {
 
+    streamingURL = '<Add URL HERE>';
+    punctuateURL = '<Add Punctuate URL HERE>';
+
     constructor(props) {
         super(props);
         this.state = {
@@ -22,11 +25,10 @@ class App extends React.Component {
     handleStart() {
         {
             const streaming = this.state.streaming;
-            const url = '<Add URL HERE>';
             const language = 'hi';
             this.setText('Connecting to server..');
             const _this = this;
-            streaming.connect(url, language, function (action, id) {
+            streaming.connect(this.streamingURL, language, function (action, id) {
                 console.log("Connected", id, 'action:', action);
                 if (action === SocketStatus.CONNECTED) {
                     console.log('Starting.....');
@@ -40,7 +42,7 @@ class App extends React.Component {
                 } else if (action === SocketStatus.TERMINATED) {
                     // Socket is closed and punctuation can be done here.
                     console.log("Punctuating: ", _this.state.text);
-                    // _this.handlePunctuation(_this.state.text);
+                    _this.handlePunctuation(_this.state.text);
                 } else {
                     console.log("Un expected action", action, id)
                 }
@@ -58,7 +60,7 @@ class App extends React.Component {
         console.log('Punctuating: ' + text);
         const _this = this;
         if (text) {
-            this.state.streaming.punctuateText(text, 'https://inference.vakyansh.in/punctuate/', (status, text) => {
+            this.state.streaming.punctuateText(text, punctuateURL, (status, text) => {
                 _this.setText(text);
             }, (status, error) => {
                 console.log("Failed to punctuate", status, error);
