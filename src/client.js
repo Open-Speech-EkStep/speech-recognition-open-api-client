@@ -6,6 +6,7 @@ module.exports = function () {
     const _this = this;
     this.socket = null;
     this.defaultSampleRate = 48000;
+    this.streamingSampleRate = 16000;
     this.speechEvents = null;
     this.input = null;
     this.processor = null;
@@ -155,19 +156,19 @@ module.exports = function () {
         if (_this.isStreaming === true) {
             _this.isStreamingOver = false;
             let data_44100 = e.inputBuffer.getChannelData(0);
-            let data_16000 = downSampleBuffer(data_44100, _this.defaultSampleRate, 16000);
+            let data_16000 = downSampleBuffer(data_44100, _this.defaultSampleRate, _this.streamingSampleRate);
             if (_this.isSpeaking) {
                 _this.isSilenceTransmitted = false;
 
                 if (_this.localBuffer !== undefined && _this.localBuffer !== null) {
                     data_16000 = appendBuffer(_this.localBuffer, data_16000)
                 }
-                _this.socket.emit('mic_data', data_16000, _this.language, true, false);
+                _this.socket.emit('mic_data', data_16000, _this.language, _this.isSpeaking, _this.isStreamingOver);
                 _this.localBuffer = null;
             } else {
                 if (!_this.isSilenceTransmitted) {
                     _this.isSilenceTransmitted = true;
-                    _this.socket.emit('mic_data', data_16000, _this.language, false, false);
+                    _this.socket.emit('mic_data', data_16000, _this.language, _this.isSpeaking, _this.isStreamingOver);
                 } else {
                     _this.localBuffer = data_16000;
                 }
@@ -175,10 +176,10 @@ module.exports = function () {
         } else {
             if (!_this.isStreamingOver) {
                 var data_44100 = e.inputBuffer.getChannelData(0);
-                var data_16000 = downSampleBuffer(data_44100, _this.defaultSampleRate, 16000);
+                var data_16000 = downSampleBuffer(data_44100, _this.defaultSampleRate, _this.streamingSampleRate);
                 // let data_16000 = data_44100;
                 _this.isStreamingOver = true;
-                _this.socket.emit('mic_data', data_16000, _this.language, false, true);
+                _this.socket.emit('mic_data', data_16000, _this.language, _this.isSpeaking, _this.isStreamingOver);
             }
         }
     }
@@ -251,13 +252,14 @@ module.exports = function () {
         callback(blob);
     }
 
-    this.connect = (socketURL, transcription_language, post_processors = [], onSuccess = () => {}, onError = () => {}) => {
+    this.connect = (socketURL, transcription_language, streaming_sample_rate = 16000, post_processors = [], onSuccess = () => {}, onError = () => {}) => {
         // establish connection
         // emit connect event
         // listen on connect success
         // trigger onSuccess/onError depending on response
 
         _this.language = transcription_language;
+        _this.streamingSampleRate = streaming_sample_rate;
         _this.post_processors = post_processors;
 
         _this.socket = io(socketURL, {
@@ -268,6 +270,7 @@ module.exports = function () {
             // query: `language=${_this.language}`,
             query: {
                 "language": _this.language,
+                "samplingRate": _this.streamingSampleRate,
                 "postProcessors": _this.post_processors
             },
             transports: ["websocket", "polling"]

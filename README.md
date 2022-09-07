@@ -69,9 +69,10 @@ import { StreamingClient, SocketStatus } from '@ai4bharat/open-speech-streaming-
     //Connect to inferencing server
     const inferenceServerURL = '<inferencing-server-url>';
     const language = '<language>';  //(eg: 'en')
+    const streaming_sample_rate = 16000;
     const post_processors = [];
 
-    client.connect(inferenceServerURL, language, post_processors, function (action, id) {
+    client.connect(inferenceServerURL, language, streaming_sample_rate, post_processors, function (action, id) {
         if (action === SocketStatus.CONNECTED) {
             // Once connection is succesful, start streaming
             client.startStreaming(function (transcript) {

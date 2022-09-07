@@ -37,12 +37,13 @@ describe('test streaming', function () {
         it('should enable streaming', function () {
             const socketURL = "abc.com";
             const transcription_language = "hi";
+            const streaming_sample_rate = 16000;
             const post_processors = [];
             const onSuccessMock = jest.fn();
             const onErrorMock = jest.fn();
 
             const client = new StreamingClient();
-            client.connect(socketURL, transcription_language, post_processors, onSuccessMock, onErrorMock);
+            client.connect(socketURL, transcription_language, streaming_sample_rate, post_processors, onSuccessMock, onErrorMock);
 
             expect(client.language).toBe(transcription_language);
             expect(origSocketClient.connect).toHaveBeenCalledTimes(1)

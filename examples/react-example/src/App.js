@@ -26,10 +26,11 @@ class App extends React.Component {
         {
             const streaming = this.state.streaming;
             const language = 'hi';
+            const streaming_sample_rate = 16000;
             const post_processors = [];
             this.setText('Connecting to server..');
             const _this = this;
-            streaming.connect(this.streamingURL, language, post_processors, function (action, id) {
+            streaming.connect(this.streamingURL, language, streaming_sample_rate, post_processors, function (action, id) {
                 console.log("Connected", id, 'action:', action);
                 if (action === SocketStatus.CONNECTED) {
                     console.log('Starting.....');
