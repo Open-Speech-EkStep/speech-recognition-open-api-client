@@ -251,20 +251,25 @@ module.exports = function () {
         callback(blob);
     }
 
-    this.connect = (socketURL, transcription_language, onSuccess = () => {}, onError = () => {}) => {
+    this.connect = (socketURL, transcription_language, post_processors = [], onSuccess = () => {}, onError = () => {}) => {
         // establish connection
         // emit connect event
         // listen on connect success
         // trigger onSuccess/onError depending on response
 
         _this.language = transcription_language;
+        _this.post_processors = post_processors;
 
         _this.socket = io(socketURL, {
             // path: '/',
             autoConnect: false,
             withCredentials: false,
             reconnectionAttempts: 5,
-            query: `language=${_this.language}`,
+            // query: `language=${_this.language}`,
+            query: {
+                "language": _this.language,
+                "postProcessors": _this.post_processors
+            },
             transports: ["websocket", "polling"]
         });
         _this.socket.connect();

@@ -1,6 +1,6 @@
 # Web Client library for Open Speech Streaming API
 
-[![NPM package](https://badgen.net/github/release/Naereen/Strapdown.js)](https://www.npmjs.com/package/@project-sunbird/open-speech-streaming-client)
+[![NPM package](https://badgen.net/github/release/Naereen/Strapdown.js)](https://www.npmjs.com/package/@ai4bharat/open-speech-streaming-client)
 
 This package contains the client library to provide real-time streaming functionality for Open Speech API [https://open-speech-ekstep.github.io/asr_model_api/][Open Speech API]. It requires a Socket.io proxy to support it. Details of the proxy can be found https://github.com/Open-Speech-EkStep/speech-recognition-open-api-proxy. 
 
@@ -31,7 +31,7 @@ The preferred way to install the client SDK for Node.js is to use the
 into a terminal window:
 
 ```sh
-npm i @project-sunbird/open-speech-streaming-client
+npm i @ai4bharat/open-speech-streaming-client
 ```
 
 ### In React Native
@@ -39,13 +39,13 @@ npm i @project-sunbird/open-speech-streaming-client
 To use the client SDK in a react native project, first install the SDK using npm:
 
 ```sh
-npm i @project-sunbird/open-speech-streaming-client
+npm i @ai4bharat/open-speech-streaming-client
 ```
 
 Then within your application, you can reference the react native compatible version of the SDK with the following:
 
 ```javascript
-import { StreamingClient, SocketStatus } from '@project-sunbird/open-speech-streaming-client';
+import { StreamingClient, SocketStatus } from '@ai4bharat/open-speech-streaming-client';
 ```
 
 ## Quick Start
@@ -54,10 +54,10 @@ import { StreamingClient, SocketStatus } from '@project-sunbird/open-speech-stre
 
     ```javascript
 
-    import {StreamingClient,SocketStatus} from '@project-sunbird/open-speech-streaming-client'
+    import {StreamingClient, SocketStatus} from '@ai4bharat/open-speech-streaming-client'
 
     //Create instance of streaming client.
-    const streamingClient= new StreamingClient();
+    const client = new StreamingClient();
 
     ```
 
@@ -69,11 +69,12 @@ import { StreamingClient, SocketStatus } from '@project-sunbird/open-speech-stre
     //Connect to inferencing server
     const inferenceServerURL = '<inferencing-server-url>';
     const language = '<language>';  //(eg: 'en')
+    const post_processors = [];
 
-    streaming.connect(inferenceServerURL, language, function (action, id) {
+    client.connect(inferenceServerURL, language, post_processors, function (action, id) {
         if (action === SocketStatus.CONNECTED) {
             // Once connection is succesful, start streaming
-            streaming.startStreaming(function (transcript) {
+            client.startStreaming(function (transcript) {
                 // transcript will give you the text which can be used further
                 console.log('transcript:', transcript);
             }, (e) => {
@@ -93,7 +94,7 @@ import { StreamingClient, SocketStatus } from '@project-sunbird/open-speech-stre
 [Note: Use this inside the condition block(action === SocketStatus.TERMINATED)]
 
     ```javascript
-    streaming.punctuateText('<Text to punctuate>', '<punctuation-url>', (status, text) => {
+    client.punctuateText('<Text to punctuate>', '<punctuation-url>', (status, text) => {
         console.log("Punctuted Text:", text);
     }, (status, error) => {
         console.log("Failed to punctuate", status, error);

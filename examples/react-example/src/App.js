@@ -1,6 +1,6 @@
 import './App.css';
 import React from 'react'
-import {SocketStatus, StreamingClient} from "@project-sunbird/open-speech-streaming-client";
+import {SocketStatus, StreamingClient} from "@ai4bharat/open-speech-streaming-client";
 
 class App extends React.Component {
 
@@ -26,9 +26,10 @@ class App extends React.Component {
         {
             const streaming = this.state.streaming;
             const language = 'hi';
+            const post_processors = [];
             this.setText('Connecting to server..');
             const _this = this;
-            streaming.connect(this.streamingURL, language, function (action, id) {
+            streaming.connect(this.streamingURL, language, post_processors, function (action, id) {
                 console.log("Connected", id, 'action:', action);
                 if (action === SocketStatus.CONNECTED) {
                     console.log('Starting.....');
