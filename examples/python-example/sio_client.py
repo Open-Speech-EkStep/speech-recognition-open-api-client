@@ -3,12 +3,17 @@ from urllib.parse import urlencode
 import signal
 import pyaudio
 
-class BhashiniStreamingClient:
-    def __init__(self, socket_url: str, language_code: str, streaming_rate: int = 640, sampling_rate: int = 16000, bytes_per_sample: int = 2, post_processors: list = [], auto_start: bool = True) -> None:
+class BhashiniStreamingClient_SocketIO:
+    def __init__(self, socket_url: str, language_code: str, streaming_rate: int = 640, sampling_rate: int = 16000, bytes_per_sample: int = 2, post_processors: list = [], auto_start: bool = False) -> None:
+        # Parameters
         self.language_code = language_code
         self.streaming_rate = streaming_rate
         self.sampling_rate = sampling_rate
         self.bytes_per_sample = bytes_per_sample
+
+        # states
+        self.audio_stream = None
+        self.is_active = False
 
         self.socket_client = self._get_client(
             on_ready=self.start_transcribing_from_mic if auto_start else None
@@ -22,10 +27,6 @@ class BhashiniStreamingClient:
             url=socket_url + "?" + query_string,
             transports=["websocket", "polling"],
         )
-
-        # states
-        self.audio_stream = None
-        self.is_active = False
 
     def _get_client(self, on_ready=None) -> socketio.Client:
         sio = socketio.Client(reconnection_attempts=5)
@@ -60,10 +61,10 @@ class BhashiniStreamingClient:
         return sio
     
     def stop(self) -> None:
-        self.is_active = False
         print("Stopping...")
         if self.audio_stream:
             self.audio_stream.stop_stream()
+        self.is_active = False
         self._transmit_end_of_stream()
 
         # Wait till stream is disconnected
@@ -95,7 +96,8 @@ class BhashiniStreamingClient:
         #     self.socket_client.emit("mic_data", (data, self.language_code, self.is_active, False))
     
     def recorder_callback(self, in_data, frame_count, time_info, status_flags) -> tuple:
-        self.socket_client.emit("mic_data", (in_data, self.language_code, self.is_active, False))
+        if self.is_active:
+            self.socket_client.emit("mic_data", (in_data, self.language_code, self.is_active, False))
         return (None, pyaudio.paContinue)
     
     def _transmit_end_of_stream(self) -> None:
@@ -106,7 +108,7 @@ class BhashiniStreamingClient:
 
 
 if __name__ == "__main__":
-    streamer = BhashiniStreamingClient(
+    streamer = BhashiniStreamingClient_SocketIO(
         socket_url="<SOCKET_SERVER_ENDPOINT>",
         language_code="<LANG_CODE>",
         streaming_rate=160,
