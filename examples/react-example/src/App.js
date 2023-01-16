@@ -60,7 +60,7 @@ class App extends React.Component {
         console.log('Punctuating: ' + text);
         const _this = this;
         if (text) {
-            this.state.streaming.punctuateText(text, punctuateURL, (status, text) => {
+            this.state.streaming.punctuateText(text, this.punctuateURL, (status, text) => {
                 _this.setText(text);
             }, (status, error) => {
                 console.log("Failed to punctuate", status, error);
