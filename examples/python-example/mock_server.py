@@ -22,9 +22,6 @@ from urllib.parse import parse_qs
 from dataclasses import dataclass
 import wave
 import requests
-from fastapi import FastAPI
-
-app = FastAPI()
 
 @dataclass
 class UserStateForASR:
@@ -188,6 +185,10 @@ class StreamingServerASR:
             # print("Disconnected with:", sid)
 
 streamer = StreamingServerASR()
+
+# Create a web-server that will host the SocketIO engine
+from fastapi import FastAPI
+app = FastAPI()
 
 # Mount it at the default path of SocketIO engine
 app.mount("/socket.io", streamer.app)
