@@ -302,7 +302,7 @@ module.exports = function () {
     _this.post_processors = post_processors;
 
     _this.socket = io(socketURL, {
-      // path: '/',
+      path: '/socket_asr.io',
       autoConnect: false,
       withCredentials: false,
       reconnectionAttempts: 5,
